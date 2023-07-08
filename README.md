@@ -1,1 +1,0 @@
-# js_ajax_test
