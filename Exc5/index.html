@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Fourth Exc</title>
+		<meta charset="UTF-8" />
+		<link rel="stylesheet" href="style.css" />
+	</head>
+	<body>
+		<div id="wrapper">
+			<div class="input-wrap">
+				<div>
+					<div class="input-group">
+						<label>Ширина картинки</label>
+						<input
+							placeholder="Введите число от 100 до 300"
+							type="number"
+							id="photo-width"
+						/>
+					</div>
+					<div class="input-group">
+						<label>Высота картинки</label>
+						<input
+							placeholder="Введите число от 100 до 300"
+							type="number"
+							id="photo-height"
+						/>
+					</div>
+				</div>
+				<button id="get-photo-button" type="submit">Получить фото</button>
+			</div>
+			<div id="error-text"></div>
+			<div id="img-container">
+				<img />
+			</div>
+		</div>
+	</body>
+	<script src="index.js"></script>
+</html>
