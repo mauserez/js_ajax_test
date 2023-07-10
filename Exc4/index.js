@@ -1,6 +1,6 @@
 /*
 Api lorem.picsum blocked
-В итоге я нашел другое API с котами
+В итоге я нашел другое API
 */
 
 let photoWidthInput = document.querySelector("#photo-width");
