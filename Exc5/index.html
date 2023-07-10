@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Fourth Exc</title>
+		<title>Third Exc</title>
 		<meta charset="UTF-8" />
 		<link rel="stylesheet" href="style.css" />
 	</head>
@@ -10,29 +10,27 @@
 			<div class="input-wrap">
 				<div>
 					<div class="input-group">
-						<label>Ширина картинки</label>
+						<label>Номер страницы</label>
 						<input
-							placeholder="Введите число от 100 до 300"
+							placeholder="Введите число от 1 до 10"
 							type="number"
-							id="photo-width"
+							id="photo-page"
 						/>
 					</div>
 					<div class="input-group">
-						<label>Высота картинки</label>
+						<label>Лимит</label>
 						<input
-							placeholder="Введите число от 100 до 300"
+							placeholder="Введите число от 1 до 10"
 							type="number"
-							id="photo-height"
+							id="photo-limit"
 						/>
 					</div>
 				</div>
-				<button id="get-photo-button" type="submit">Получить фото</button>
-			</div>
-			<div id="error-text"></div>
-			<div id="img-container">
-				<img />
+				<button id="get-photo-button" type="submit">Запрос</button>
 			</div>
 		</div>
+		<div id="error-text"></div>
+		<div id="img-container"></div>
 	</body>
 	<script src="index.js"></script>
 </html>

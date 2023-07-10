@@ -3,17 +3,16 @@ Api lorem.picsum blocked
 В итоге я нашел другое API с котами
 */
 
-let photoWidthInput = document.querySelector("#photo-width");
-let photoHeightInput = document.querySelector("#photo-height");
-let getPhotoButton = document.querySelector("#get-photo-button");
+let photoPageInput = document.querySelector("#photo-page");
+let photoLimitInput = document.querySelector("#photo-limit");
+let getPhotosButton = document.querySelector("#get-photo-button");
 let errorTextDiv = document.querySelector("#error-text");
-let img = document.querySelector("#img-container img");
 
 function validateInput(value) {
 	let parsedValue = parseFloat(value);
 	let result = { value: parsedValue };
 
-	if (parsedValue >= 100 && parsedValue <= 300) {
+	if (parsedValue >= 1 && parsedValue <= 10) {
 		result.check = true;
 	} else {
 		result.check = false;
@@ -22,42 +21,82 @@ function validateInput(value) {
 	return result;
 }
 
-function getPhoto(width = 100, height = 100) {
-	return fetch(`https://loremflickr.com/${width}/${height}`).then(
-		(response) => {
-			return response.url;
-		}
-	);
+function getPhoto(page = 1, limit = 5) {
+	return fetch(
+		`https://api.thecatapi.com/v1/images/search?page=${page}&limit=${limit}`
+	).then((response) => {
+		return response.json();
+	});
 }
 
-getPhotoButton.addEventListener("click", async (e) => {
+getPhotosButton.addEventListener("click", async (e) => {
 	errorTextDiv.style.height = "0";
-	const widthValue = validateInput(photoWidthInput.value);
-	const heightValue = validateInput(photoHeightInput.value);
+	const pageValue = validateInput(photoPageInput.value);
+	const limitValue = validateInput(photoLimitInput.value);
+	let imgContainer = document.querySelector("#img-container");
+	imgContainer.innerHTML = "";
+	localStorage.photos = [];
 
-	if (!widthValue.check || !heightValue.check) {
+	if (!pageValue.check || !limitValue.check) {
 		errorTextDiv.style.height = "15px";
-		errorTextDiv.innerHTML = "Одно из чисел вне диапазона от 100 до 300";
-		img.setAttribute("src", "");
+		errorTextDiv.innerHTML = "Номер страницы и лимит вне диапазона от 1 до 10";
 	} else {
-		let photoUrl = await getPhoto(widthValue.value, heightValue.value);
-		img.setAttribute("src", photoUrl);
+		let photos = await getPhoto(pageValue.value, limitValue.value);
+
+		/*
+		API багует и не ограничивает по лимиту
+		Пришлось ограничить самому в цикле for
+		*/
+		let photoUrls = [];
+		for (let i = 0; i < limitValue.value; i++) {
+			let photoDiv = document.createElement("div");
+			photoDiv.style.backgroundImage = `url(${photos[i].url})`;
+			imgContainer.append(photoDiv);
+			photoUrls.push(photos[i].url);
+		}
+		localStorage.setItem("photoUrls", JSON.stringify(photoUrls));
 	}
 });
 
-window.onload = function () {
-	photoWidthInput.focus();
+window.onload = () => {
+	photoPageInput.focus();
+	drawLocalPhotos();
 };
 
+function drawLocalPhotos() {
+	if (localStorage.photoUrls) {
+		let imgContainer = document.querySelector("#img-container");
+		JSON.parse(localStorage.photoUrls).forEach((photoUrl) => {
+			let photoDiv = document.createElement("div");
+			photoDiv.style.backgroundImage = `url(${photoUrl})`;
+			imgContainer.append(photoDiv);
+		});
+	}
+}
 /*
-Напишите код приложения, интерфейс которого представляет собой 2 input и кнопку submit.
+Написать код приложения, интерфейс которого состоит из двух input и кнопки.
 В input можно ввести любое число.
 
+Заголовок первого input — «номер страницы».
+Заголовок второго input — «лимит».
+Заголовок кнопки — «запрос».
 При клике на кнопку происходит следующее:
 
-Если оба числа не попадают в диапазон от 100 до 300 или введено не число —
-выводить ниже текст «одно из чисел вне диапазона от 100 до 300»;
+Если число в первом input не попадает в диапазон от 1 до 10 или не является числом —
+выводить ниже текст «Номер страницы вне диапазона от 1 до 10»;
 
-Если числа попадают в диапазон от 100 до 300 — сделать запрос
-c помощью fetch по URL https://picsum.photos/200/300, где первое число — ширина картинки, второе — высота.
-. */
+Если число во втором input не попадает в диапазон от 1 до 10 или не является числом —
+выводить ниже текст «Лимит вне диапазона от 1 до 10»;
+
+Если и первый, и второй input не в диапазонах или не являются числами —
+выводить ниже текст «Номер страницы и лимит вне диапазона от 1 до 10»;
+
+Если числа попадают в диапазон от 1 до 10 — сделать запрос по URL https://picsum.photos/v2/list?page=1&limit=10,
+где GET-параметр page — это число из первого input, а GET-параметр limit — это введённое число второго input.
+
+Пример. Если пользователь ввёл 5 и 7, то запрос будет вида https://picsum.photos/v2/list?page=5&limit=7.
+После получения данных вывести список картинок на экран.
+
+Если пользователь перезагрузил страницу,
+то ему должны показываться картинки из последнего успешно выполненного запроса (использовать localStorage).
+  */

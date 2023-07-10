@@ -45,7 +45,7 @@ getPhotoButton.addEventListener("click", async (e) => {
 	}
 });
 
-window.onload = function () {
+window.onload = () => {
 	photoWidthInput.focus();
 };
 
