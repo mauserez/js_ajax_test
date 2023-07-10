@@ -1,5 +1,3 @@
-// second exc
-
 let jsonExample = `
 	{
 		"list": [

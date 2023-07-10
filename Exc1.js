@@ -1,4 +1,3 @@
-// first exc
 let xmlExample = `
 	<list>
 		<student>
